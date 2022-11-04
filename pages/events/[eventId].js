@@ -4,7 +4,7 @@ import EventSummary from "../../components/event-detail/event-summary";
 import EventLogistics from "../../components/event-detail/event-logistics";
 import EventContent from "../../components/event-detail/event-content";
 
-import { getEventById, getAllEvents } from "../../helpers/api-util";
+import { getEventById, getFeaturedEvents } from "../../helpers/api-util";
 
 const EventDetailPage = (props) => {
   // get event by id
@@ -16,7 +16,11 @@ const EventDetailPage = (props) => {
   const event = selectedEvent;
 
   if (!event) {
-    return <p>No event found!</p>;
+    return (
+      <div className="center">
+        <p>Loading...</p>
+      </div>
+    );
   }
   return (
     <div>
@@ -44,6 +48,7 @@ export const getStaticProps = async (context) => {
     props: {
       selectedEvent: event,
     },
+    revalidate: 30, // if a new request comes in and it's more than 30 seconds since the page was last generated, it will be generated again
   };
 };
 
@@ -52,11 +57,12 @@ this is a dynamic page and there is an infinite amount of possible pages that co
 */
 
 export const getStaticPaths = async () => {
-  const events = await getAllEvents();
+  // const events = await getAllEvents();
+  const events = await getFeaturedEvents();
 
   const paths = events.map((event) => ({ params: { eventId: event.id } }));
   return {
     paths: paths,
-    fallback: false,
+    fallback: true,
   };
 };
