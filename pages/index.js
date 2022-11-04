@@ -1,9 +1,10 @@
 import Head from "next/head";
-import { getFeaturedEvents } from "../data/dummy-data";
 import EventList from "../components/events/event-list";
+import { getFeaturedEvents } from "../helpers/api-util";
 
-export default function Home() {
-  const featuredEvents = getFeaturedEvents();
+export default function Home(props) {
+  // const featuredEvents = getFeaturedEvents();
+  const { featuredEvents } = props;
   return (
     <div>
       <Head>
@@ -15,3 +16,15 @@ export default function Home() {
     </div>
   );
 }
+
+// using getStaticProps function makes sense here, we don't need to pre-render it for every request
+
+export const getStaticProps = async () => {
+  const featuredEvents = await getFeaturedEvents();
+
+  return {
+    props: {
+      featuredEvents: featuredEvents,
+    },
+  };
+};
