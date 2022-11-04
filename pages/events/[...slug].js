@@ -1,27 +1,22 @@
 import { useRouter } from "next/router";
-import { getFilteredEvents } from "../../data/dummy-data";
+import { getFilteredEvents } from "../../helpers/api-util";
 
 import EventList from "../../components/events/event-list";
 import Button from "../../components/ui/button";
 
-const FilteredEventsPage = () => {
-  const router = useRouter();
+const FilteredEventsPage = (props) => {
+  // const router = useRouter();
 
-  const filterData = router.query.slug;
+  // const filterData = router.query.slug;
 
-  if (!filterData) {
-    return <p className="center">Loading...</p>;
-  }
+  // if (!filterData) {
+  //   return <p className="center">Loading...</p>;
+  // }
 
-  const filteredYear = +filterData[0];
-  const filteredMonth = +filterData[1];
+  // const filteredYear = +filterData[0];
+  // const filteredMonth = +filterData[1];
 
-  if (
-    isNaN(filteredYear) ||
-    isNaN(filteredMonth) ||
-    filteredMonth < 1 ||
-    filteredMonth > 12
-  ) {
+  if (props.hasError) {
     return (
       <div>
         <p>Invalid filter, please adjust your filters</p>
@@ -32,10 +27,7 @@ const FilteredEventsPage = () => {
     );
   }
 
-  const filteredEvents = getFilteredEvents({
-    year: filteredYear,
-    month: filteredMonth,
-  });
+  const filteredEvents = props.events;
 
   if (!filteredEvents || filteredEvents.length === 0) {
     return (
@@ -54,4 +46,40 @@ const FilteredEventsPage = () => {
     </div>
   );
 };
+
 export default FilteredEventsPage;
+
+export const getServerSideProps = async (context) => {
+  const { params } = context;
+
+  const filterData = params.slug;
+
+  const filteredYear = +filterData[0];
+  const filteredMonth = +filterData[1];
+
+  if (
+    isNaN(filteredYear) ||
+    isNaN(filteredMonth) ||
+    filteredMonth < 1 ||
+    filteredMonth > 12
+  ) {
+    return {
+      props: { hasError: true },
+      notFound: true,
+      // redirect: {
+      //   destination: "/",
+      // },
+    };
+  }
+
+  const filteredEvents = await getFilteredEvents({
+    year: filteredYear,
+    month: filteredMonth,
+  });
+
+  return {
+    props: {
+      events: filteredEvents,
+    },
+  };
+};
