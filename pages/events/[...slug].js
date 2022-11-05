@@ -4,6 +4,8 @@ import { getFilteredEvents } from "../../helpers/api-util";
 import EventList from "../../components/events/event-list";
 import Button from "../../components/ui/button";
 
+import Head from "next/head";
+
 const FilteredEventsPage = (props) => {
   // const router = useRouter();
 
@@ -16,9 +18,17 @@ const FilteredEventsPage = (props) => {
   // const filteredYear = +filterData[0];
   // const filteredMonth = +filterData[1];
 
+  const pageHeadData = (
+    <Head>
+      <title>Filtered Events</title>
+      <meta name="description" content={`A list of filtered events `} />
+    </Head>
+  );
+
   if (props.hasError) {
     return (
       <div>
+        {pageHeadData}
         <p>Invalid filter, please adjust your filters</p>
         <div className="center">
           <Button link="/events">Show all events</Button>
@@ -32,6 +42,7 @@ const FilteredEventsPage = (props) => {
   if (!filteredEvents || filteredEvents.length === 0) {
     return (
       <div>
+        {pageHeadData}
         <p>No events found for the chosen filter!</p>
         <div className="center">
           <Button link="/events">Show All Events</Button>
@@ -42,6 +53,7 @@ const FilteredEventsPage = (props) => {
 
   return (
     <div>
+      {pageHeadData}
       <EventList items={filteredEvents} />
     </div>
   );
