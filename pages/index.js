@@ -3,6 +3,8 @@ import { getFeaturedEvents } from "../helpers/api-util";
 
 import Head from "next/head";
 
+import NewsletterRegistration from "../components/input/newsletter-registration";
+
 export default function Home(props) {
   // const featuredEvents = getFeaturedEvents();
   const { featuredEvents } = props;
@@ -16,6 +18,7 @@ export default function Home(props) {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <NewsletterRegistration />
       <EventList items={featuredEvents} />
     </div>
   );
