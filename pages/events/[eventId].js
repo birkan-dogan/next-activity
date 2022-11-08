@@ -8,6 +8,8 @@ import { getEventById, getFeaturedEvents } from "../../helpers/api-util";
 
 import Head from "next/head";
 
+import Comments from "../../components/input/comments";
+
 const EventDetailPage = (props) => {
   // get event by id
   // const router = useRouter();
@@ -35,6 +37,7 @@ const EventDetailPage = (props) => {
       <EventContent>
         <p>{event.description}</p>
       </EventContent>
+      <Comments eventId={event.id} />
     </div>
   );
 };
