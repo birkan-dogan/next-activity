@@ -36,21 +36,28 @@
 
 // Setting up a MongoDB Database
 
-import { MongoClient } from "mongodb";
+import { connectDatabase, insertDocument } from "../../helpers/db-util";
 
 const handler = async (req, res) => {
   if (req.method === "POST") {
     const email = req.body.email;
 
-    const client = await MongoClient.connect(
-      "mongodb+srv://Birkan:birkan@cluster0.0fb34j8.mongodb.net/events?retryWrites=true&w=majority"
-    );
-    const db = client.db();
+    let client;
 
-    await db.collection("emails").insertOne({ email: email });
+    try {
+      client = await connectDatabase();
+    } catch (error) {
+      res.status(500).json({ message: "Connecting to the database failed" });
+      return;
+    }
 
-    client.close();
-    res.status(201).json({ message: "Success", user: newUser });
+    try {
+      await insertDocument(client, "emails", { email: email });
+      res.status(201).json({ message: "Success" });
+      client.close();
+    } catch (error) {
+      res.status(500).json({ message: "Inserting data failed" });
+    }
   } else {
     res.status(200).json({ message: "This works" });
   }
