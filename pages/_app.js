@@ -3,8 +3,6 @@ import Layout from "../components/layout/layout";
 
 import Head from "next/head";
 
-import Notification from "../components/ui/notification";
-
 import { NotificationContextProvider } from "../store/notification-context";
 
 function MyApp({ Component, pageProps }) {
@@ -19,7 +17,6 @@ function MyApp({ Component, pageProps }) {
           {/* this meta tag is often added to pages to ensure that the page is responsive and scales correctly and we threfore typically want to add this to all our pages. */}
         </Head>
         <Component {...pageProps} />
-        <Notification title="Test" message="This is a test" status="pending" />
       </Layout>
     </NotificationContextProvider>
   );
