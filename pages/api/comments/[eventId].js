@@ -40,11 +40,14 @@ const handler = async (req, res) => {
     res.status(201).json({ message: "Added comment", comment: newComment });
   }
   if (req.method === "GET") {
-    const dummyList = [
-      { id: "a1", name: "Jerry", text: "a first comment here" },
-      { id: "a2", name: "Cosmo", text: "a second comment here" },
-    ];
-    res.status(200).json({ message: "Added comment", comments: dummyList });
+    const db = client.db();
+
+    const documents = await db
+      .collection("comments")
+      .find()
+      .sort({ _id: -1 })
+      .toArray();
+    res.status(200).json({ message: "Added comment", comments: documents });
   }
   client.close();
 };
